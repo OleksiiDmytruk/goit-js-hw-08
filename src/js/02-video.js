@@ -5,14 +5,19 @@ const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
 player.on('timeupdate', throttle(onPlay, 1000));
 function onPlay({ seconds }) {
-  localStorage.setItem(CURRENT_TIME, JSON.stringify(seconds));
+  localStorage.setItem(CURRENT_TIME, seconds);
 }
-let time = 0;
-if (!localStorage.getItem(CURRENT_TIME)) {
-  return;
-} else {
-  time = JSON.parse(localStorage.getItem(CURRENT_TIME));
-}
+let time = localStorage.getItem(CURRENT_TIME) || 0;
+
+// if (!localStorage.getItem(CURRENT_TIME)) {
+//   return;
+// } else {
+//   try {
+//     time = JSON.parse(localStorage.getItem(CURRENT_TIME));
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
 
 player
   .setCurrentTime(time)
@@ -22,11 +27,6 @@ player
   .catch(function (error) {
     switch (error.name) {
       case 'RangeError':
-        // the time was less than 0 or greater than the video’s duration
-        break;
-
-      default:
-        // some other error occurred
         break;
     }
   });
